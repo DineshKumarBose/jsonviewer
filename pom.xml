@@ -29,10 +29,10 @@
                 <configuration>
                     <artifactItems>
                         <artifactItem>
-                            <groupId>com.github.jsimone</groupId>
-                            <artifactId>webapp-runner-main</artifactId>
+                            <groupId>com.leafsoft</groupId>
+                            <artifactId>jsonviewer-main</artifactId>
                             <version>8.5.23.1</version>
-                            <destFileName>webapp-runner.jar</destFileName>
+                            <destFileName>jsonviewer.jar</destFileName>
                         </artifactItem>
                     </artifactItems>
                 </configuration>
