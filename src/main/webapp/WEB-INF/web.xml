@@ -10,8 +10,11 @@
         This is a simple web application with a source code organization
         based on the recommendations of the Application Developer's Guide.
     </description>
+	<welcome-file-list>
+	    <welcome-file>index.html</welcome-file>
+	</welcome-file-list>
 
-    <servlet>
+    <!-- <servlet>
         <servlet-name>MainServlet</servlet-name>
         <servlet-class>Main</servlet-class>
     </servlet>
@@ -19,6 +22,23 @@
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/*</url-pattern>
+    </servlet-mapping> -->
+    
+    <servlet>
+        <servlet-name>LeafRest</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <!-- Define the ResourceConfig class -->
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>com.leafsoft.app.LeafResourceConfig</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- Map all the URLs to the Jersey ServletContainer -->
+    <servlet-mapping>
+        <servlet-name>LeafRest</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
