@@ -5,44 +5,70 @@
 <title>JSON Viewer</title>
 </head>
 <body>
-
-<textarea id="inputJson" rows="" cols=""></textarea>
-<textarea id="outputJson" rows="" cols=""></textarea>
-<input type='button' id='convertJson' value='covnvert'></input>
+<table>
+<tr>
+<td><textarea id="inputJson" rows="40" cols="30"></textarea></td>
+<td><input type='button' id='convertJson' value='covnvert'></input></td>
+<td><Label id="outputJson"></Label></td>
+</tr>
+<tr>
+<td colspan="3">
+<label id="errorMsg"></label>
+</td>
+</tr>
+</table>
 </body>
-<script src="js/jquery-1.7.1.min.js"  type="text/javascript"></script>
+<style>
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
+body { white-space: pre; font-family: monospace; }
+</style>
+<script src="../../js/jquery-1.7.1.min.js"  type="text/javascript"></script>
 <script>
 
 $('body').on('click','#convertJson',function(){
 	var inputJson = 	$('#inputJson').val();
 	$.ajax({
-		url: "rest/jsonformatter",
+		url: "../../rest/jsonformatter",
 		type: "POST",
 		data : inputJson,
 		contentType: 'application/json',
 		success: function(data) {
-			$('#outputJson').val(JSON.stringify(data));
+			$('#outputJson').html(syntaxHighlight(data));
+			$('#errorMsg').html("");
 		},
 		error: function(jqXHR, exception) {
-			if (jqXHR.status === 0) {
-	            msg = 'Not connect.\n Verify Network.';
-	        } else if (jqXHR.status == 404) {
-	            msg = 'Requested page not found. [404]';
-	        } else if (jqXHR.status == 500) {
-	            msg = 'Internal Server Error [500].';
-	        } else if (exception === 'parsererror') {
-	            msg = 'Requested JSON parse failed.';
-	        } else if (exception === 'timeout') {
-	            msg = 'Time out error.';
-	        } else if (exception === 'abort') {
-	            msg = 'Ajax request aborted.';
-	        } else {
-	            msg = 'Uncaught Error.\n' + jqXHR.responseText;
-	        }
-			alert(msg);
+			$('#errorMsg').html("Validation ERROR : "+jqXHR.responseText);
+			$('#outputJson').html("");
 		}
 	})
 });
+
+function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+         json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
 
 </script>
 </html>

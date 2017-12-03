@@ -23,7 +23,6 @@ public class JSONFormatter {
 	public Response createTrackInJSON(String test) {
     	String indented = "";
     	try {
-    		LOGGER.log(Level.INFO, "Input request:::"+test);
 		ObjectMapper mapper = new ObjectMapper();
 		Object json = mapper.readValue(test, Object.class);
 		indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
